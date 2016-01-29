@@ -62,7 +62,8 @@ def read_update_delete(request, pk):
 def search(request):
     if request.method == "GET":
         query = {k: v for k, v in request.GET.items()}
-        print(models.Annotation.objects.filter(**query))
-        return HttpResponse()
+        annotations = models.Annotation.objects.filter(**query)
+        serializer = serializers.AnnotationSerializer(annotations, many=True)
+        return JSONResponse({"total": len(serializer.data), "rows": serializer.data})
     else:
         return HttpResponseForbidden()
