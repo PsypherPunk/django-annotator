@@ -9,8 +9,10 @@ class Annotation(models.Model):
     updated = models.DateTimeField(auto_now=True)
     text = models.TextField()
     quote = models.TextField()
-    uri = models.CharField(max_length=4096)
-    user = models.CharField(max_length=128)
+    # TODO: These should not be blank; `django-rest-framework` seems
+    #     to require it...
+    uri = models.CharField(max_length=4096, blank=False, null=True)
+    user = models.CharField(max_length=128, blank=False, null=True)
     consumer = models.CharField(max_length=64, default="thedatashed")
 
     class Meta:
