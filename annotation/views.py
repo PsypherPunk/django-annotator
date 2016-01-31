@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -31,8 +32,10 @@ def index_create(request):
         serializer = serializers.AnnotationSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return JSONResponse(serializer.data, status=201)
-        return JSONResponse(serializer.errors, status=400)
+            response = HttpResponse(status=303)
+            response["Location"] = reverse("read_update_delete",
+                                           kwargs={"pk": serializer.data["id"]})
+            return response
     else:
         return HttpResponseForbidden()
 
@@ -49,8 +52,10 @@ def read_update_delete(request, pk):
         serializer = serializers.AnnotationSerializer(annotation, data=data)
         if serializer.is_valid():
             serializer.save()
-            print(serializer.validated_data)
-            return HttpResponse(status=204)
+            response = HttpResponse(status=303)
+            response["Location"] = reverse("read_update_delete",
+                                           kwargs={"pk": serializer.data["id"]})
+            return response
     elif request.method == "DELETE":
         annotation = get_object_or_404(models.Annotation, pk=pk)
         annotation.delete()

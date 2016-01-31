@@ -35,7 +35,10 @@ class IndexTest(TestCase):
                                     data=json.dumps(self.annotation),
                                     content_type="application/json")
         response = views.index_create(request)
-        content = json.loads(response.content.decode("utf-8"))
+        self.assertEquals(303, response.status_code)
+        self.assertTrue(response.has_header("Location"))
+        print(response.get("Location"))
+        #content = json.loads(response.content.decode("utf-8"))
         # Verify that the created annotation is identical...
-        for key in self.annotation.keys():
-            self.assertEquals(content.get(key), self.annotation.get(key))
+        #for key in self.annotation.keys():
+        #    self.assertEquals(content.get(key), self.annotation.get(key))
