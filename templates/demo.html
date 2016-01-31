@@ -19,7 +19,7 @@
         var app = new annotator.App();
         app.include(annotator.ui.main);
         app.include(annotator.storage.http, {
-            prefix: "http://localhost:7000"
+            prefix: window.location.origin
         });
         app.start().then(function () {
             app.annotations.load();
