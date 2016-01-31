@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% load static %}
+        <meta charset="utf-8">
+        <title>django-annotations</title>
+        <meta name="description" content="django-annotations demo.">
+        <meta name="author" content="PsypherPunk">
+    </head>
+    <body>
+        <p>Caster level deal damage elemental type favored class fighter flank material plane outer plane pinned projectile weapon ranged attack roll renewal domain sickened square turning damage. Ability drained artifact burrow checked compulsion subschool energy plane glamer subschool hit die incorporeal subtype luck domain melee nonintelligent planning domain racial hit die shadow subschool shapechanger subtype spontaneous casting strength domain threatened square tiny. Ability damaged base save bonus check class comatose confused damage reduction darkvision deal damage deflection bonus gargantuan gaseous form grappling melee attack powerful charge rounding size modifier telepathic link water domain.</p>
+        <p>5-foot step abjuration aquatic subtype base attack bonus concentrate on a spell critical hit drowning fraction huge inherent bonus lava effects magic domain miss chance negative energy negative level panicked poison psionics ray reach weapon shadow subschool turn unarmed strike. Copper piece deafened engaged exhausted fighter melee attack bonus rune domain shadow subschool silver piece total cover turn resistance. Air subtype casting time ethereal fraction humanoid type improved evasion large living multiplying natural reach psionics reflex save repose domain size modifier skill rank trample turn undead will save. Ability damage ability drain arcane spell failure balance domain charisma cold dangers continuous damage deafened dispel check good subtype halfling domain infection lethal damage living construct subtype miss chance roll movement modes natural weapon nonplayer character off hand ooze type portal domain repose domain sacred bonus spell slot summon surprise telepathic link transmutation tremorsense turn undead.</p>
+        <p>Air domain attack roll dying fatigued hit die outer plane racial bonus repose domain square suffocation. Ability damage ability modifier automatic miss blown away concealment continuous damage coup de grace creation subschool experience points fire domain fire subtype fortitude save frightened incorporeal magic domain magical beast type medium negative energy poison polymorph powerful charge regeneration scry shadow subschool use-activated item will save. 0-level spell ability check confused constrict construct type drow domain drowning druid effective hit point increase extraplanar fast healing fly goblinoid subtype hit die immediate action improved evasion intelligence level loss line of sight multiplying ranged attack roll resistance bonus rune domain thirst turn wisdom.</p>
+        <p>Baatezu subtype charm subschool check craft domain dungeon master fly melee touch attack ranged attack repose domain scry special ability spell resistance stack. Aberration type arcane spell archon subtype attack automatic miss balance domain base save bonus class level compulsion subschool cure spell elemental type enhancement bonus frightful presence hardness immunity initiative check invisible monk nobility domain racial hit die reaction repose domain round skill modifier spell-like ability. Air domain aquatic subtype artifact bonus cleric cold domain creature critical roll enemy nonlethal damage reaction reflex save sorcerer time domain turn. Ally character level charisma darkvision diminutive direct a spell exhausted fate domain glamer subschool light weapon monstrous humanoid type move action ocean domain planning domain points of damage psionics scry space special ability spell stable thrown weapon total cover trained.</p>
+        <p>Ability damage archon subtype class level colossal concentrate on a spell divination end of round extraordinary ability luck bonus manufactured weapons miniature figure nobility domain rend result smoke effects subschool. Automatic miss casting time chaos domain compulsion extraplanar subtype large morale bonus movement modes portal domain racial hit die rebuke undead resistance to energy skill. Ability ability damaged blindsight cantrip cold domain cold immunity creation subschool cross-class skill cure spell darkness diminutive dodge bonus double weapon elemental plane evil subtype extraordinary ability grab lethal damage level adjustment living construct subtype native subtype psionics range penalty reflex save shapechanger subtype smoke effects spell resistance spell version turning damage water dangers.</p>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static "js/annotator.min.js" %}"></script>
+    <script type="text/javascript">
+        var app = new annotator.App();
+        app.include(annotator.ui.main);
+        app.include(annotator.storage.http, {
+            prefix: "http://localhost:7000"
+        });
+        app.start().then(function () {
+            app.annotations.load();
+        });
+    </script>
+    </body>
+</html>

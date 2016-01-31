@@ -2,6 +2,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from . import models
@@ -72,3 +73,9 @@ def search(request):
         return JSONResponse({"total": len(serializer.data), "rows": serializer.data})
     else:
         return HttpResponseForbidden()
+
+
+class DemoView(TemplateView):
+    template_name = "demo.html"
+
+
