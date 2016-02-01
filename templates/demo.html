@@ -21,8 +21,17 @@
         app.include(annotator.storage.http, {
             prefix: window.location.origin
         });
+        app.include(function() {
+            return {
+                beforeAnnotationCreated: function (annotation) {
+                    annotation.uri = window.location.href;
+                }
+            }
+        });
         app.start().then(function () {
-            app.annotations.load();
+            app.annotations.load({
+                uri: window.location.href
+            });
         });
     </script>
     </body>
