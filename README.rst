@@ -17,6 +17,7 @@ To see a working demo:
     git clone https://github.com/PsypherPunk/django-annotations.git
     cd django-annotations
     pip install -r requirements/base.txt
+    ./manage.py migrate
     ./manage.py runserver
 
 A demo. page will then be available at ``/demo``.
