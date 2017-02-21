@@ -65,3 +65,8 @@ As per Annotator's documentation, the `root <http://docs.annotatorjs.org/en/v1.2
     }
 
 The ``name`` returned can be configured by setting ``ANNOTATOR_NAME`` in your ``settings`` (defaulting to the above).
+
+django-cors-headers
++++++++++++++++++++
+
+If you have any issues with *Cross-origin resource sharing (CORS)*, consider installing the ``django-cors-headers`` `package <https://github.com/ottoyiu/django-cors-headers>`_.
