@@ -17,6 +17,7 @@ setup(
     long_description=README,
     author="PsypherPunk",
     author_email="psypherpunk@gmail.com",
+    url="https://github.com/PsypherPunk/django-annotator",
     classifiers=[
         "Environment :: Web Environment",
         "Framework :: Django",
