@@ -1,25 +1,37 @@
+from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import (HttpResponse,
+                         HttpResponseForbidden,
+                         HttpResponseBadRequest)
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
-from . import models
-from . import serializers
+
+import annotator
+from annotator import models, serializers
+
 
 class JSONResponse(HttpResponse):
     """
-    An HttpResponse that renders its content into JSON.
+    An ``HttpResponse`` that renders its content into JSON.
     """
+
     def __init__(self, data, **kwargs):
         content = JSONRenderer().render(data)
-        kwargs['content_type'] = 'application/json'
+        kwargs["content_type"] = "application/json"
         super(JSONResponse, self).__init__(content, **kwargs)
 
 
 def root(request):
-    return JSONResponse({"name": "The DataShed Annotation Store.", "version": "0.0.1"})
+    if request.method == "GET":
+        return JSONResponse({"name": getattr(settings,
+                                             "ANNOTATOR_NAME",
+                                             "django-annotator-store"),
+                             "version": annotator.__version__})
+    else:
+        return HttpResponseForbidden()
 
 
 @csrf_exempt
@@ -37,6 +49,8 @@ def index_create(request):
             response["Location"] = reverse("read_update_delete",
                                            kwargs={"pk": serializer.data["id"]})
             return response
+        else:
+            return HttpResponseBadRequest(content=str(serializer.errors))
     else:
         return HttpResponseForbidden()
 
@@ -76,6 +90,4 @@ def search(request):
 
 
 class DemoView(TemplateView):
-    template_name = "demo.html"
-
-
+    template_name = "annotator/demo.html"
