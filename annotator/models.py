@@ -22,9 +22,9 @@ class Annotation(models.Model):
     updated = models.DateTimeField(auto_now=True)
     text = models.TextField()
     quote = models.TextField()
-    uri = models.CharField(max_length=4096, blank=False)
-    user = models.CharField(max_length=128, blank=False)
-    consumer = models.CharField(max_length=64, default="thedatashed")
+    uri = models.CharField(max_length=4096, blank=True)
+    user = models.CharField(max_length=128, blank=True)
+    consumer = models.CharField(max_length=64, blank=True)
 
     class Meta:
         ordering = ("created",)
