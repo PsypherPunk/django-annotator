@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        {% load static %}
+        {% load static from staticfiles %}
         <meta charset="utf-8">
         <title>django-annotations</title>
-        <meta name="description" content="django-annotations demo.">
+        <meta name="description" content="django-annotator demo.">
         <meta name="author" content="PsypherPunk">
     </head>
     <body>
@@ -14,7 +14,7 @@
         <p>Baatezu subtype charm subschool check craft domain dungeon master fly melee touch attack ranged attack repose domain scry special ability spell resistance stack. Aberration type arcane spell archon subtype attack automatic miss balance domain base save bonus class level compulsion subschool cure spell elemental type enhancement bonus frightful presence hardness immunity initiative check invisible monk nobility domain racial hit die reaction repose domain round skill modifier spell-like ability. Air domain aquatic subtype artifact bonus cleric cold domain creature critical roll enemy nonlethal damage reaction reflex save sorcerer time domain turn. Ally character level charisma darkvision diminutive direct a spell exhausted fate domain glamer subschool light weapon monstrous humanoid type move action ocean domain planning domain points of damage psionics scry space special ability spell stable thrown weapon total cover trained.</p>
         <p>Ability damage archon subtype class level colossal concentrate on a spell divination end of round extraordinary ability luck bonus manufactured weapons miniature figure nobility domain rend result smoke effects subschool. Automatic miss casting time chaos domain compulsion extraplanar subtype large morale bonus movement modes portal domain racial hit die rebuke undead resistance to energy skill. Ability ability damaged blindsight cantrip cold domain cold immunity creation subschool cross-class skill cure spell darkness diminutive dodge bonus double weapon elemental plane evil subtype extraordinary ability grab lethal damage level adjustment living construct subtype native subtype psionics range penalty reflex save shapechanger subtype smoke effects spell resistance spell version turning damage water dangers.</p>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-    <script type="text/javascript" src="{% static "js/annotator.min.js" %}"></script>
+    <script type="text/javascript" src="{% static 'js/annotator.min.js' %}"></script>
     <script type="text/javascript">
         var app = new annotator.App();
         app.include(annotator.ui.main);

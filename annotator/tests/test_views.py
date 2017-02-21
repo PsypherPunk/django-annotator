@@ -1,13 +1,13 @@
 import json
+
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import RequestFactory
-from urllib.parse import urljoin
-from annotation import views
+
+from annotator import views
 
 
 class IndexTest(TestCase):
-
     def setUp(self):
         self.factory = RequestFactory()
         self.index_create_url = reverse("index_create")
@@ -19,12 +19,12 @@ class IndexTest(TestCase):
             "quote": "the text that was annotated",
             "uri": "http://example.com",
             "ranges": [
-                    {
-                        "start": "/p[69]/span/span",
-                        "end": "/p[70]/span/span",
-                        "startOffset": 0,
-                        "endOffset": 120
-                    }
+                {
+                    "start": "/p[69]/span/span",
+                    "end": "/p[70]/span/span",
+                    "startOffset": 0,
+                    "endOffset": 120
+                }
             ]
         }
 
@@ -34,7 +34,6 @@ class IndexTest(TestCase):
                                     content_type="application/json")
         response = views.index_create(request)
         return response
-        
 
     def test_index_create(self):
         request = self.factory.get(self.index_create_url)
@@ -57,11 +56,10 @@ class IndexTest(TestCase):
         response = views.index_create(request)
         content = json.loads(response.content.decode("utf-8"))
 
-        request =  self.factory.get(self.read_update_delete_url)
+        request = self.factory.get(self.read_update_delete_url)
         response = views.read_update_delete(request,
                                             content[0].get("id"))
         content = json.loads(response.content.decode("utf-8"))
 
         for key in self.annotation.keys():
             self.assertEquals(content.get(key), self.annotation.get(key))
-
