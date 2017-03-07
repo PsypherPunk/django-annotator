@@ -71,6 +71,8 @@ def read_update_delete(request, pk):
             response["Location"] = reverse("read_update_delete",
                                            kwargs={"pk": serializer.data["id"]})
             return response
+        else:
+            return HttpResponseBadRequest(content=str(serializer.errors))
     elif request.method == "DELETE":
         annotation = get_object_or_404(models.Annotation, pk=pk)
         annotation.delete()
