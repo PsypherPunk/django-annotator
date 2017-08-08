@@ -1,94 +1,123 @@
 from django.conf import settings
-from django.core.urlresolvers import reverse
-from django.http import (HttpResponse,
-                         HttpResponseForbidden,
-                         HttpResponseBadRequest)
-from django.shortcuts import get_object_or_404
-from django.views.decorators.csrf import csrf_exempt
+from django.core import urlresolvers
+from django.http.response import HttpResponseForbidden, JsonResponse
 from django.views.generic import TemplateView
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
+
+import django_filters
+from rest_framework import status, viewsets
+from rest_framework.response import Response
 
 import annotator
-from annotator import models, serializers
+from annotator import filters, models, serializers
 
 
-class JSONResponse(HttpResponse):
-    """
-    An ``HttpResponse`` that renders its content into JSON.
-    """
+class AnnotationViewSet(viewsets.ModelViewSet):
+    queryset = models.Annotation.objects.all()
+    serializer_class = serializers.AnnotationSerializer
+    filter_class = filters.AnnotationFilterSet
+    filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
 
-    def __init__(self, data, **kwargs):
-        content = JSONRenderer().render(data)
-        kwargs["content_type"] = "application/json"
-        super(JSONResponse, self).__init__(content, **kwargs)
+    def root(self, _):
+        """
+        Implements the
+        `root <http://docs.annotatorjs.org/en/v1.2.x/storage.html#root>`_
+        endpoint.
 
+        :param _:
+            :class:`rest_framework.request.Request` object—ignored here.
+        :return:
+            API information :class:`rest_framework.response.Response`.
+        """
+        return JsonResponse(
+            {
+                "name": getattr(settings,
+                                "ANNOTATOR_NAME",
+                                "django-annotator-store"),
+                "version": annotator.__version__
+            })
 
-def root(request):
-    if request.method == "GET":
-        return JSONResponse({"name": getattr(settings,
-                                             "ANNOTATOR_NAME",
-                                             "django-annotator-store"),
-                             "version": annotator.__version__})
-    else:
-        return HttpResponseForbidden()
+    def search(self, _):
+        """
+        Implements the
+        `search <http://docs.annotatorjs.org/en/v1.2.x/storage.html#search>`_
+        endpoint.
 
+        We rely on the behaviour of the ``filter_backends`` to manage
+        the actual filtering of search results.
 
-@csrf_exempt
-def index_create(request):
-    if request.method == "GET":
-        annotations = models.Annotation.objects.all()
-        serializer = serializers.AnnotationSerializer(annotations, many=True)
-        return JSONResponse(serializer.data)
-    elif request.method == "POST":
-        data = JSONParser().parse(request)
-        serializer = serializers.AnnotationSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            response = HttpResponse(status=303)
-            response["Location"] = reverse("read_update_delete",
-                                           kwargs={"pk": serializer.data["id"]})
-            return response
-        else:
-            return HttpResponseBadRequest(content=str(serializer.errors))
-    else:
-        return HttpResponseForbidden()
+        :param _:
+            :class:`rest_framework.request.Request` object—ignored here
+            as we rely on the ``filter_backends``.
+        :return:
+            filtered :class:`rest_framework.response.Response`.
+        """
+        queryset = super(AnnotationViewSet, self).filter_queryset(
+            self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
 
+        return Response({
+            "total": len(serializer.data),
+            "rows": serializer.data
+        })
 
-@csrf_exempt
-def read_update_delete(request, pk):
-    if request.method == "GET":
-        annotation = get_object_or_404(models.Annotation, pk=pk)
-        serializer = serializers.AnnotationSerializer(annotation)
-        return JSONResponse(serializer.data, status=200)
-    elif request.method == "PUT":
-        annotation = get_object_or_404(models.Annotation, pk=pk)
-        data = JSONParser().parse(request)
-        serializer = serializers.AnnotationSerializer(annotation, data=data)
-        if serializer.is_valid():
-            serializer.save()
-            response = HttpResponse(status=303)
-            response["Location"] = reverse("read_update_delete",
-                                           kwargs={"pk": serializer.data["id"]})
-            return response
-        else:
-            return HttpResponseBadRequest(content=str(serializer.errors))
-    elif request.method == "DELETE":
-        annotation = get_object_or_404(models.Annotation, pk=pk)
-        annotation.delete()
-        return HttpResponse(status=204)
-    else:
-        return HttpResponseForbidden()
+    def get_success_headers(self, data):
+        """
+        As per the *Annotator* documentation regarding the
+        `create <http://docs.annotatorjs.org/en/v1.2.x/storage.html#create>`_
+        and
+        `update <http://docs.annotatorjs.org/en/v1.2.x/storage.html#update>`_
+        endpoints, we must return an absolute URL in the ``Location``
+        header.
+        :param data:
+            serialized object.
+        :return:
+            :class:`dict` of HTTP headers.
+        """
+        headers = super(AnnotationViewSet, self).get_success_headers(data)
 
+        url = urlresolvers.reverse("annotations-detail",
+                                   kwargs={"pk": data["id"]})
+        headers.update({"Location": self.request.build_absolute_uri(url)})
 
-def search(request):
-    if request.method == "GET":
-        query = {k: v for k, v in request.GET.items()}
-        annotations = models.Annotation.objects.filter(**query)
-        serializer = serializers.AnnotationSerializer(annotations, many=True)
-        return JSONResponse({"total": len(serializer.data), "rows": serializer.data})
-    else:
-        return HttpResponseForbidden()
+        return headers
+
+    def create(self, request, *args, **kwargs):
+        """
+        See the *Annotator* documentation regarding the
+        `create <http://docs.annotatorjs.org/en/v1.2.x/storage.html#create>`_
+        endpoint.
+
+        :param request:
+            incoming :class:`rest_framework.request.Request`.
+        :return:
+            303 :class:`rest_framework.response.Response`.
+        """
+        response = super(AnnotationViewSet, self).create(request,
+                                                         *args,
+                                                         **kwargs)
+        response.data = None
+        response.status_code = status.HTTP_303_SEE_OTHER
+        return response
+
+    def update(self, request, *args, **kwargs):
+        """
+        See the *Annotator* documentation regarding the
+        `update <http://docs.annotatorjs.org/en/v1.2.x/storage.html#update>`_
+        endpoint.
+
+        :param request:
+            incoming :class:`rest_framework.request.Request`.
+        :return:
+            303 :class:`rest_framework.response.Response`.
+        """
+        response = super(AnnotationViewSet, self).update(request,
+                                                         *args,
+                                                         **kwargs)
+        for h, v in self.get_success_headers(response.data).items():
+            response[h] = v
+        response.data = None
+        response.status_code = status.HTTP_303_SEE_OTHER
+        return response
 
 
 class DemoView(TemplateView):

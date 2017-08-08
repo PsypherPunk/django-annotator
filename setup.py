@@ -29,5 +29,7 @@ setup(
     install_requires=[
         "Django",
         "djangorestframework",
+        "drf-writable-nested",
+        "django-filter",
     ],
 )

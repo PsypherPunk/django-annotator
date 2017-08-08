@@ -1,20 +1,30 @@
 import uuid
+
 from django.db import models
 
 
 class Annotation(models.Model):
     """
-    Follows the `Annotation format <http://docs.annotatorjs.org/en/v1.2.x/annotation-format.html>`_,
+    Follows the *Annotation*
+    `format <http://docs.annotatorjs.org/en/v1.2.x/annotation-format.html>`_,
     of ``annotatorjs``.
 
-    :param annotator_schema_version: schema version: default v1.0
-    :param created: created datetime
-    :param updated: updated datetime
-    :param text: content of annotation
-    :param quote: the annotated text
-    :param uri: URI of annotated document
-    :param user: user id of annotation owner
-    :param consumer: consumer key of backend
+    :param annotator_schema_version:
+        schema version: default v1.0
+    :param created:
+        created datetime
+    :param updated:
+        updated datetime
+    :param text:
+        content of annotation
+    :param quote:
+        the annotated text
+    :param uri:
+        URI of annotated document
+    :param user:
+        user id of annotation owner
+    :param consumer:
+        consumer key of backend
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     annotator_schema_version = models.CharField(max_length=8, default="v1.0")
@@ -32,14 +42,20 @@ class Annotation(models.Model):
 
 class Range(models.Model):
     """
-    Follows the `Annotation format <http://docs.annotatorjs.org/en/v1.2.x/annotation-format.html>`_,
+    Follows the *Annotation*
+    `format <http://docs.annotatorjs.org/en/v1.2.x/annotation-format.html>`_,
     of ``annotatorjs``.
 
-    :param start: (relative) XPath to start element
-    :param end: (relative) XPath to end element
-    :param startOffset: character offset within start element
-    :param endOffset: character offset within end element
-    :param annotation: related ``Annotation``
+    :param start:
+        (relative) XPath to start element
+    :param end:
+        (relative) XPath to end element
+    :param startOffset:
+        character offset within start element
+    :param endOffset:
+        character offset within end element
+    :param annotation:
+        related :class:`annotator.models.Annotation`.
     """
     start = models.CharField(max_length=128)
     end = models.CharField(max_length=128)
