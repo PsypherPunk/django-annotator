@@ -2,6 +2,9 @@
 django-annotator
 ================
 
+2.0.0
+=====
+
 Django implementation of `annotatorjs Storage <http://annotatorjs.org/>`_.
 
 
@@ -61,7 +64,7 @@ As per Annotator's documentation, the `root <http://docs.annotatorjs.org/en/v1.2
 
     {
         "name": "django-annotator-store",
-        "version": "1.0.0"
+        "version": "2.0.0"
     }
 
 The ``name`` returned can be configured by setting ``ANNOTATOR_NAME`` in your ``settings`` (defaulting to the above).
