@@ -27,10 +27,8 @@ class RootTestCase(TestCase):
         content = json.loads(response.content.decode("utf-8"))
 
         self.assertEqual(200, response.status_code)
-        self.assertListEqual(["name", "version"],
-                             sorted(content.keys()))
-        self.assertEqual(annotator.__version__,
-                         content["version"])
+        self.assertListEqual(["name", "version"], sorted(content.keys()))
+        self.assertEqual(annotator.__version__, content["version"])
 
 
 class AnnotationTestCase(TestCase):
@@ -57,15 +55,17 @@ class AnnotationTestCase(TestCase):
                     "start": "/p[69]/span/span",
                     "end": "/p[70]/span/span",
                     "startOffset": 0,
-                    "endOffset": 120
+                    "endOffset": 120,
                 }
-            ]
+            ],
         }
 
     def create_annotation(self, annotation=None):
-        return self.client.post(self.index_create_url,
-                                data=json.dumps(annotation or self.annotation),
-                                content_type="application/json")
+        return self.client.post(
+            self.index_create_url,
+            data=json.dumps(annotation or self.annotation),
+            content_type="application/json",
+        )
 
 
 class IndexTestCase(AnnotationTestCase):
@@ -128,9 +128,11 @@ class DetailTestCase(AnnotationTestCase):
         """
         response = self.create_annotation()
 
-        response = self.client.patch(response.get("Location"),
-                                     data='{"text": "Another note I wrote."}',
-                                     content_type="application/json")
+        response = self.client.patch(
+            response.get("Location"),
+            data='{"text": "Another note I wrote."}',
+            content_type="application/json",
+        )
 
         self.assertEquals(303, response.status_code)
         self.assertTrue(response.has_header("Location"))
@@ -168,13 +170,18 @@ class SearchTestCase(AnnotationTestCase):
 
         annotations = (
             ("man", "Well, what've you got?"),
-            ("waitress", ("Well, there's egg and bacon; egg sausage and bacon; "
-                          "egg and spam; egg bacon and spam; egg bacon sausage "
-                          "and spam; spam bacon sausage and spam; spam egg "
-                          "spam spam bacon and spam; spam sausage spam spam "
-                          "bacon spam tomato and spam...")),
-            ("vikings", "Spam spam spam spam..."),
-            ("vikings", "Spam! Lovely spam! Lovely spam!")
+            (
+                "waitress",
+                (
+                    "Well, there's egg and bacon; egg sausage and bacon; "
+                    "egg and spam; egg bacon and spam; egg bacon sausage "
+                    "and spam; spam bacon sausage and spam; spam egg "
+                    "spam spam bacon and spam; spam sausage spam spam "
+                    "bacon spam tomato and spam…"
+                ),
+            ),
+            ("vikings", "Spam spam spam spam…"),
+            ("vikings", "Spam! Lovely spam! Lovely spam!"),
         )
         annotation = self.annotation
         for k, v in annotations:
@@ -187,12 +194,12 @@ class SearchTestCase(AnnotationTestCase):
         Verifies that on receipt of a valid search, an object with
         ``total`` and ``rows`` fields is returned.
         """
-        response = self.client.get(reverse("annotations-search"),
-                                   data={"quote": "vikings"})
+        response = self.client.get(
+            reverse("annotations-search"), data={"quote": "vikings"}
+        )
         content = json.loads(response.content.decode("utf-8"))
 
-        self.assertListEqual(["rows", "total"],
-                             sorted(content.keys()))
+        self.assertListEqual(["rows", "total"], sorted(content.keys()))
         self.assertEqual(2, content["total"])
         self.assertEqual(2, len(content["rows"]))
 
@@ -200,8 +207,9 @@ class SearchTestCase(AnnotationTestCase):
         """
         All fields, save ``text`` should be exact matches.
         """
-        response = self.client.get(reverse("annotations-search"),
-                                   data={"quote": "viking"})
+        response = self.client.get(
+            reverse("annotations-search"), data={"quote": "viking"}
+        )
         content = json.loads(response.content.decode("utf-8"))
 
         self.assertEqual(0, content["total"])
@@ -214,8 +222,7 @@ class SearchTestCase(AnnotationTestCase):
         ``text`` should allow matches where the search term is
         *contained* in the ``text`` field.
         """
-        response = self.client.get(reverse("annotations-search"),
-                                   data={"text": "spam"})
+        response = self.client.get(reverse("annotations-search"), data={"text": "spam"})
         content = json.loads(response.content.decode("utf-8"))
 
         self.assertEqual(3, content["total"])

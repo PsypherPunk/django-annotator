@@ -26,6 +26,7 @@ class Annotation(models.Model):
     :param consumer:
         consumer key of backend
     """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     annotator_schema_version = models.CharField(max_length=8, default="v1.0")
     created = models.DateTimeField(auto_now_add=True)
@@ -57,6 +58,7 @@ class Range(models.Model):
     :param annotation:
         related :class:`annotator.models.Annotation`.
     """
+
     start = models.CharField(max_length=128)
     end = models.CharField(max_length=128)
     startOffset = models.IntegerField()
