@@ -30,11 +30,10 @@ class AnnotationViewSet(viewsets.ModelViewSet):
         """
         return JsonResponse(
             {
-                "name": getattr(settings,
-                                "ANNOTATOR_NAME",
-                                "django-annotator-store"),
-                "version": annotator.__version__
-            })
+                "name": getattr(settings, "ANNOTATOR_NAME", "django-annotator-store"),
+                "version": annotator.__version__,
+            }
+        )
 
     def search(self, _):
         """
@@ -51,14 +50,10 @@ class AnnotationViewSet(viewsets.ModelViewSet):
         :return:
             filtered :class:`rest_framework.response.Response`.
         """
-        queryset = super(AnnotationViewSet, self).filter_queryset(
-            self.get_queryset())
+        queryset = super(AnnotationViewSet, self).filter_queryset(self.get_queryset())
         serializer = self.get_serializer(queryset, many=True)
 
-        return Response({
-            "total": len(serializer.data),
-            "rows": serializer.data
-        })
+        return Response({"total": len(serializer.data), "rows": serializer.data})
 
     def get_success_headers(self, data):
         """
@@ -75,8 +70,7 @@ class AnnotationViewSet(viewsets.ModelViewSet):
         """
         headers = super(AnnotationViewSet, self).get_success_headers(data)
 
-        url = urlresolvers.reverse("annotations-detail",
-                                   kwargs={"pk": data["id"]})
+        url = urlresolvers.reverse("annotations-detail", kwargs={"pk": data["id"]})
         headers.update({"Location": self.request.build_absolute_uri(url)})
 
         return headers
@@ -92,9 +86,7 @@ class AnnotationViewSet(viewsets.ModelViewSet):
         :return:
             303 :class:`rest_framework.response.Response`.
         """
-        response = super(AnnotationViewSet, self).create(request,
-                                                         *args,
-                                                         **kwargs)
+        response = super(AnnotationViewSet, self).create(request, *args, **kwargs)
         response.data = None
         response.status_code = status.HTTP_303_SEE_OTHER
         return response
@@ -110,9 +102,7 @@ class AnnotationViewSet(viewsets.ModelViewSet):
         :return:
             303 :class:`rest_framework.response.Response`.
         """
-        response = super(AnnotationViewSet, self).update(request,
-                                                         *args,
-                                                         **kwargs)
+        response = super(AnnotationViewSet, self).update(request, *args, **kwargs)
         for h, v in self.get_success_headers(response.data).items():
             response[h] = v
         response.data = None

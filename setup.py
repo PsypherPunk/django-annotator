@@ -27,7 +27,6 @@ setup(
         "Programming Language :: Python :: 3",
     ],
     install_requires=[
-        "Django",
         "djangorestframework",
         "drf-writable-nested",
         "django-filter",
