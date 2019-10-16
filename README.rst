@@ -1,3 +1,5 @@
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FPsypherPunk%2Fdjango-annotator.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FPsypherPunk%2Fdjango-annotator?ref=badge_shield)
+
 ================
 django-annotator
 ================
@@ -76,3 +78,7 @@ django-cors-headers
 +++++++++++++++++++
 
 If you have any issues with *Cross-origin resource sharing (CORS)*, consider installing the ``django-cors-headers`` `package <https://github.com/ottoyiu/django-cors-headers>`_.
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FPsypherPunk%2Fdjango-annotator.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FPsypherPunk%2Fdjango-annotator?ref=badge_large)
