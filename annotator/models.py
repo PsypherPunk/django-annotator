@@ -63,4 +63,4 @@ class Range(models.Model):
     end = models.CharField(max_length=128)
     startOffset = models.IntegerField()
     endOffset = models.IntegerField()
-    annotation = models.ForeignKey(Annotation, related_name="ranges")
+    annotation = models.ForeignKey(Annotation, related_name="ranges",on_delete=models.SET_NULL)
