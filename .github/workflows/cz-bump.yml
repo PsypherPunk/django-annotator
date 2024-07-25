@@ -1,0 +1,49 @@
+name: Bump version
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  bump_version:
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+    runs-on: ubuntu-latest
+    name: "Bump version with Commitizen"
+    steps:
+
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: "${{ secrets.GH_TOKEN }}"
+      
+      - name: Install Commitizen
+        run: |
+          python3 -m pip install commitizen==3.28.0
+      
+      - name: Validate commits
+        if: github.ref != 'refs/heads/main'
+        run: |
+          cz check --rev-range origin/main..
+
+          echo "prerelease=--prerelease=rc" >>"${GITHUB_ENV}"
+          echo "devrelease=--devrelease=${GITHUB_RUN_NUMBER}" >>"${GITHUB_ENV}"
+      
+      - id: cz
+        name: Bump version
+        run: |
+          git config --local user.name 'github-actions[bot]'
+          git config --local user.email 'github-actions[bot]@users.noreply.github.com'
+
+          cz --name cz_customize bump --check-consistency --yes ${prerelease} ${devrelease}
+
+          echo "::set-output name=version::${REV}"
+      
+      - name: Push commit
+        run: |
+          REMOTE_REPO="https://${GITHUB_ACTOR}:${{ secrets.GH_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git"
+          git push "${REMOTE_REPO}" "HEAD:${GITHUB_REF#refs/heads/}" --tags
+
+      - name: Print version
+        run: echo "Bumped to version ${{ steps.cz.outputs.version }}"

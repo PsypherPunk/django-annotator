@@ -21,9 +21,9 @@ import tempfile
 
 import django
 from django.conf import settings
-from django.urls import include, path
 from django.core.wsgi import get_wsgi_application
 from django.http import HttpResponse
+from django.urls import include, path
 
 DEBUG = os.environ.get("DEBUG", "on") == "on"
 
@@ -79,7 +79,7 @@ settings.configure(
             },
         },
     ],
-    REST_FRAMEWORK = {
+    REST_FRAMEWORK={
         "DEFAULT_FILTER_BACKENDS": (
             "django_filters.rest_framework.DjangoFilterBackend",
         ),

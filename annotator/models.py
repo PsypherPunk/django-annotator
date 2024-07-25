@@ -58,6 +58,7 @@ class Range(models.Model):
     :param annotation:
         related :class:`annotator.models.Annotation`.
     """
+
     id = models.AutoField(primary_key=True)
     start = models.CharField(max_length=128)
     end = models.CharField(max_length=128)

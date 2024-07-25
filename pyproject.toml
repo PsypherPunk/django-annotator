@@ -17,6 +17,19 @@ django-filter = "^24.2"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.7.1"
+commitizen = "^3.28.0"
+
+[tool.commitizen]
+version = "2.1.0"
+bump_message = "bump: version $current_version → $new_version [skip ci]"
+version_files = [
+    "pwny/__init__.py:^__version__",
+    "pyproject.toml:^version",
+]
+
+[tool.commitizen.customize]
+bump_pattern = '^(BREAKING CHANGE|build|chore|docs|feat|fix|refactor|test)(\(.+\))?(!)?'
+bump_map = {"!" = "MAJOR", build = "PATCH", chore = "PATCH", docs = "PATCH", feat = "MINOR", fix = "PATCH", refactor = "PATCH", test = "PATCH" }
 
 [build-system]
 requires = ["poetry-core"]
