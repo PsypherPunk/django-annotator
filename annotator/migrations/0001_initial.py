@@ -52,7 +52,11 @@ class Migration(migrations.Migration):
                 ("endOffset", models.IntegerField()),
                 (
                     "annotation",
-                    models.ForeignKey(to="annotator.Annotation", related_name="ranges"),
+                    models.ForeignKey(
+                        to="annotator.Annotation",
+                        on_delete=models.CASCADE,
+                        related_name="ranges",
+                    ),
                 ),
             ],
         ),

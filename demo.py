@@ -21,7 +21,7 @@ import tempfile
 
 import django
 from django.conf import settings
-from django.conf.urls import include, url
+from django.urls import include, path
 from django.core.wsgi import get_wsgi_application
 from django.http import HttpResponse
 
@@ -32,7 +32,7 @@ SECRET_KEY = os.environ.get(
     "".join(
         [
             random.SystemRandom().choice(
-                "abcdefghijklmnopqrstuvwxyz0123456789\!@#$%^&*(-_=+)"
+                "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)"
             )
             for i in range(50)
         ]
@@ -56,6 +56,8 @@ settings.configure(
         "django.contrib.auth",
         "django.contrib.contenttypes",
         "django.contrib.staticfiles",
+        "rest_framework",
+        "django_filters",
         "annotator",
     ],
     STATIC_URL="/static/",
@@ -77,6 +79,11 @@ settings.configure(
             },
         },
     ],
+    REST_FRAMEWORK = {
+        "DEFAULT_FILTER_BACKENDS": (
+            "django_filters.rest_framework.DjangoFilterBackend",
+        ),
+    },
     DATABASES={
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -87,7 +94,7 @@ settings.configure(
 
 django.setup()
 
-urlpatterns = (url(r"", include("annotator.urls")),)
+urlpatterns = (path(r"", include("annotator.urls")),)
 
 application = get_wsgi_application()
 

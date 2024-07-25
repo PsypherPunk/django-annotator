@@ -1,7 +1,7 @@
 import django_filters
 from django.conf import settings
-from django.core import urlresolvers
-from django.http.response import HttpResponseForbidden, JsonResponse
+from django.http.response import JsonResponse
+from django.urls import reverse
 from django.views.generic import TemplateView
 from rest_framework import status, viewsets
 from rest_framework.response import Response
@@ -13,8 +13,8 @@ from annotator import filters, models, serializers
 class AnnotationViewSet(viewsets.ModelViewSet):
     queryset = models.Annotation.objects.all()
     serializer_class = serializers.AnnotationSerializer
-    filter_class = filters.AnnotationFilterSet
     filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
+    filterset_class = filters.AnnotationFilterSet
 
     def root(self, _):
         """
@@ -69,7 +69,7 @@ class AnnotationViewSet(viewsets.ModelViewSet):
         """
         headers = super(AnnotationViewSet, self).get_success_headers(data)
 
-        url = urlresolvers.reverse("annotations-detail", kwargs={"pk": data["id"]})
+        url = reverse("annotations-detail", kwargs={"pk": data["id"]})
         headers.update({"Location": self.request.build_absolute_uri(url)})
 
         return headers

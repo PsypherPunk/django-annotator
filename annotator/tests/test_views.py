@@ -1,8 +1,8 @@
 import json
 
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.urls import reverse
 from rest_framework.test import APIClient
 
 import annotator
@@ -79,11 +79,11 @@ class IndexTestCase(AnnotationTestCase):
         """
         response = self.client.get(self.index_create_url)
         content = json.loads(response.content.decode("utf-8"))
-        self.assertEquals(0, len(content))
+        self.assertEqual(0, len(content))
 
         response = self.create_annotation()
 
-        self.assertEquals(303, response.status_code)
+        self.assertEqual(303, response.status_code)
         self.assertTrue(response.has_header("Location"))
 
     def test_index(self):
@@ -96,7 +96,7 @@ class IndexTestCase(AnnotationTestCase):
         response = self.client.get(self.index_create_url)
         content = json.loads(response.content.decode("utf-8"))
 
-        self.assertEquals(1, len(content))
+        self.assertEqual(1, len(content))
         self.assertEqual(1, models.Annotation.objects.count())
         self.assertEqual(1, models.Range.objects.count())
 
@@ -117,7 +117,7 @@ class DetailTestCase(AnnotationTestCase):
         content = json.loads(response.content.decode("utf-8"))
 
         for key in self.annotation.keys():
-            self.assertEquals(content.get(key), self.annotation.get(key))
+            self.assertEqual(content.get(key), self.annotation.get(key))
 
     def test_partial_update(self):
         """
@@ -133,7 +133,7 @@ class DetailTestCase(AnnotationTestCase):
             content_type="application/json",
         )
 
-        self.assertEquals(303, response.status_code)
+        self.assertEqual(303, response.status_code)
         self.assertTrue(response.has_header("Location"))
         self.assertEqual(0, len(response.content))
 

@@ -10,7 +10,7 @@ documentation (`root`, `index`, `create`, `read`, `update`,`delete` and
 To see a working demo:
 
 ``sh
-poetry install 
+poetry install
 poetry run python3 ./demo.py
 ``
 
@@ -25,20 +25,34 @@ poetry add django-annotator
 ```
 
 Following installation it can be added to any Django project by updating the
-`INSTALLED_APPS`:
+`INSTALLED_APPS`, along with its dependencies:
 
 ```python
 INSTALLED_APPS = (
     ...
+    "rest_framework",
+    "django_filters",
     "annotator",
-    ...
 )
+```
+
+As per the integration
+[documentation](https://django-filter.readthedocs.io/en/latest/guide/rest_framework.html)
+for `django-filter`, `DEFAULT_FILTER_BACKENDS` must also be added to
+`settings.py`:
+
+```python
+REST_FRAMEWORK = {
+    "DEFAULT_FILTER_BACKENDS": (
+        "django_filters.rest_framework.DjangoFilterBackend",
+    ),
+},
 ```
 
 Then run `migrate` to include the new tables from `django-annotator`:
 
 ```sh
-poetry python3 ./manage.py migrate
+poetry run python3 ./manage.py migrate
 ```
 
 ## Annotator
@@ -60,7 +74,8 @@ return information in the format:
 }
 ```
 
-The `name` returned can be configured by setting `ANNOTATOR_NAME` in your `settings` (defaulting to the above).
+The `name` returned can be configured by setting `ANNOTATOR_NAME` in your
+`settings` (defaulting to the above).
 
 ## `django-cors-headers`
 
