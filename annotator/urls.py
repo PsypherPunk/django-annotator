@@ -1,5 +1,4 @@
 from django.conf.urls import url
-
 from rest_framework.routers import format_suffix_patterns
 
 from annotator import views

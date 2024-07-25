@@ -3,7 +3,6 @@ import json
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-
 from rest_framework.test import APIClient
 
 import annotator

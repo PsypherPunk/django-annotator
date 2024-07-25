@@ -1,9 +1,8 @@
+import django_filters
 from django.conf import settings
 from django.core import urlresolvers
 from django.http.response import HttpResponseForbidden, JsonResponse
 from django.views.generic import TemplateView
-
-import django_filters
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 

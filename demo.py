@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 Inspired by *The World's Smallest Django Project* in *Lightweight
@@ -25,14 +25,21 @@ from django.conf.urls import include, url
 from django.core.wsgi import get_wsgi_application
 from django.http import HttpResponse
 
-
 DEBUG = os.environ.get("DEBUG", "on") == "on"
 
-SECRET_KEY = os.environ.get("SECRET_KEY",
-                            "".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789\!@#$%^&*(-_=+)") for i in range(50)]))
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY",
+    "".join(
+        [
+            random.SystemRandom().choice(
+                "abcdefghijklmnopqrstuvwxyz0123456789\!@#$%^&*(-_=+)"
+            )
+            for i in range(50)
+        ]
+    ),
+)
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS",
-                               "127.0.0.1").split(",")
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "127.0.0.1").split(",")
 
 db = tempfile.NamedTemporaryFile(delete=False)
 settings.configure(
@@ -45,12 +52,14 @@ settings.configure(
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
     ),
-    INSTALLED_APPS=["django.contrib.auth",
-                    "django.contrib.contenttypes",
-                    "django.contrib.staticfiles",
-                    "annotator"],
+    INSTALLED_APPS=[
+        "django.contrib.auth",
+        "django.contrib.contenttypes",
+        "django.contrib.staticfiles",
+        "annotator",
+    ],
     STATIC_URL="/static/",
-    TEMPLATES = [
+    TEMPLATES=[
         {
             "BACKEND": "django.template.backends.django.DjangoTemplates",
             "DIRS": [],
@@ -68,19 +77,17 @@ settings.configure(
             },
         },
     ],
-    DATABASES = {
+    DATABASES={
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": db.name,
         }
-    }
+    },
 )
 
 django.setup()
 
-urlpatterns = (
-    url(r"", include("annotator.urls")),
-)
+urlpatterns = (url(r"", include("annotator.urls")),)
 
 application = get_wsgi_application()
 
@@ -91,4 +98,3 @@ if __name__ == "__main__":
     execute_from_command_line([os.path.abspath(__file__), "migrate"])
     execute_from_command_line([os.path.abspath(__file__), "runserver"])
     os.unlink(db.name)
-
