@@ -4,6 +4,3 @@ updates:
     directory: "/requirements"
     schedule:
       interval: "weekly"
-    commit-message:
-      prefix: "build"
-      include: "scope"
