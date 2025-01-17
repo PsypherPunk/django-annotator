@@ -3,7 +3,7 @@ name = "django-annotator"
 packages = [
     { include = "annotator" },
 ]
-version = "2.2.3"
+version = "2.2.4"
 description = "Implementation of annotatorjs's Storage/Search API."
 authors = ["PsypherPunk <psypherpunk@gmail.com>"]
 license = "Apache-2.0"
@@ -20,7 +20,7 @@ pre-commit = "^3.7.1"
 commitizen = "^3.28.0"
 
 [tool.commitizen]
-version = "2.2.3"
+version = "2.2.4"
 bump_message = "bump: version $current_version → $new_version [skip ci]"
 version_files = [
     "pwny/__init__.py:^__version__",
