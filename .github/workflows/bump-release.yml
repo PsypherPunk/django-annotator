@@ -1,4 +1,4 @@
-name: Bump version
+name: Bump version and release to PyPI
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - 'main'
 
 jobs:
-  bump_version:
+  bump-version:
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
     runs-on: ubuntu-latest
     name: "Bump version with Commitizen"
@@ -47,3 +47,47 @@ jobs:
 
       - name: Print version
         run: echo "Bumped to version ${{ steps.cz.outputs.version }}"
+
+  build:
+    runs-on: ubuntu-latest
+    needs: bump-version
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - uses: abatilo/actions-poetry@v4
+      with:
+        poetry-version: 'latest'
+
+    - run: poetry build
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: dist-files
+        path: dist/
+
+  pypi-publish:
+    name: Upload release to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/django-annotator
+    permissions:
+      id-token: write
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - uses: actions/download-artifact@v4
+      with:
+        name: dist-files
+        path: ./dist
+
+    - uses: pypa/gh-action-pypi-publish@release/v1
