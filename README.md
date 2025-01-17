@@ -9,10 +9,10 @@ documentation (`root`, `index`, `create`, `read`, `update`,`delete` and
 
 To see a working demo:
 
-``sh
+```sh
 poetry install
 poetry run python3 ./demo.py
-``
+```
 
 This will run the tests, after which a demo. page will be available at `/demo`.
 
